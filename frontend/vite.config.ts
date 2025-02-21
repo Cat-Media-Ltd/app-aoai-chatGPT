@@ -14,6 +14,7 @@ export default defineConfig({
         short_name: 'HubSpot Expert',
         description: 'HubSpot Expert by Cat Media',
         theme_color: '#f3f3f3',
+        start_url: '/',   //root url 
         
         icons: [
           {
