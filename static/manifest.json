@@ -1,0 +1,26 @@
+{
+  "index.css": {
+    "file": "assets/index-b3d7ea65.css",
+    "src": "index.css"
+  },
+  "index.html": {
+    "assets": [
+      "assets/Contoso-d348d1af.svg",
+      "assets/Send-f8c768b7.svg"
+    ],
+    "css": [
+      "assets/index-b3d7ea65.css"
+    ],
+    "file": "assets/index-19a5fd64.js",
+    "isEntry": true,
+    "src": "index.html"
+  },
+  "src/assets/Contoso.svg": {
+    "file": "assets/Contoso-d348d1af.svg",
+    "src": "src/assets/Contoso.svg"
+  },
+  "src/assets/Send.svg": {
+    "file": "assets/Send-f8c768b7.svg",
+    "src": "src/assets/Send.svg"
+  }
+}
