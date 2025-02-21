@@ -45,6 +45,28 @@ export const Answer = ({ answer, onCitationClicked, onExectResultClicked }: Prop
     appStateContext?.state.frontendSettings?.feedback_enabled && appStateContext?.state.isCosmosDBAvailable?.cosmosDB
   const SANITIZE_ANSWER = appStateContext?.state.frontendSettings?.sanitize_answer
 
+  function formatCitationPath(path: string): string {
+    // Remove query parameters
+    let cleanedPath = path.split('?')[0];
+  
+    // Remove everything after ".html" (case-insensitive)
+    cleanedPath = cleanedPath.replace(/\.html.*/i, "");
+  
+    // Remove leading slash if present
+    cleanedPath = cleanedPath.startsWith('/') ? cleanedPath.slice(1) : cleanedPath;
+  
+    // Replace underscores with forward slashes
+    cleanedPath = cleanedPath.replace(/_/g, '/');
+  
+    // Split the path into segments (assuming the first segment is the domain)
+    const segments = cleanedPath.split('/');
+    const domain = segments.shift();
+  
+    // Rebuild the URL with https:// protocol
+    return `https://${domain}/${segments.join('/')}`;
+  }
+  
+
   const handleChevronClick = () => {
     setChevronIsExpanded(!chevronIsExpanded)
     toggleIsRefAccordionOpen()
@@ -359,7 +381,13 @@ export const Answer = ({ answer, onCitationClicked, onExectResultClicked }: Prop
                   tabIndex={0}
                   role="link"
                   key={idx}
-                  onClick={() => onCitationClicked(citation)}
+                  onClick={() => {
+                    onCitationClicked(citation);
+                    //on a new tab
+                    window.open(`${formatCitationPath(createCitationFilepath(citation, idx))}`, '_blank');
+
+
+                  }}
                   onKeyDown={e => (e.key === 'Enter' || e.key === ' ' ? onCitationClicked(citation) : null)}
                   className={styles.citationContainer}
                   aria-label={createCitationFilepath(citation, idx)}>
