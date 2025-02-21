@@ -104,7 +104,7 @@ export const Answer = ({ answer, onCitationClicked, onExectResultClicked }: Prop
     } else {
       citationFilename = `Citation ${index}`
     }
-    return citationFilename
+    return formatCitationPath(citationFilename)
   }
 
   const onLikeResponseClicked = async () => {
@@ -346,7 +346,7 @@ export const Answer = ({ answer, onCitationClicked, onExectResultClicked }: Prop
             </Stack.Item>
           )}
           <Stack.Item className={styles.answerDisclaimerContainer}>
-            <span className={styles.answerDisclaimer}>AI-generated content may be incorrect</span>
+            <span className={styles.answerDisclaimer}>Always check AI-generated content</span>
           </Stack.Item>
           {!!answer.exec_results?.length && (
             <Stack.Item onKeyDown={e => (e.key === 'Enter' || e.key === ' ' ? toggleIsRefAccordionOpen() : null)}>
@@ -382,17 +382,16 @@ export const Answer = ({ answer, onCitationClicked, onExectResultClicked }: Prop
                   role="link"
                   key={idx}
                   onClick={() => {
-                    onCitationClicked(citation);
-                    //on a new tab
-                    window.open(`${formatCitationPath(createCitationFilepath(citation, idx))}`, '_blank');
-
-
+                  onCitationClicked(citation);
+                  // Open link in a new tab without abandoning the current page like shift+click
+                  window.open(createCitationFilepath(citation, idx), "_blank");
                   }}
                   onKeyDown={e => (e.key === 'Enter' || e.key === ' ' ? onCitationClicked(citation) : null)}
                   className={styles.citationContainer}
                   aria-label={createCitationFilepath(citation, idx)}>
                   <div className={styles.citation}>{idx}</div>
-                  {createCitationFilepath(citation, idx, true)}
+                  {createCitationFilepath(citation, idx, false)}
+                  <FontIcon iconName="OpenInNewTab" className={styles.newTabIcon} />
                 </span>
               )
             })}
