@@ -22,13 +22,14 @@
 }
 
 .headerTitle {
-  font-style: normal;
+  font-style: bold;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: 600;
   font-size: 20px;
-  line-height: 28px;
   display: flex;
   align-items: flex-end;
-  color: #242424;
+  color: #FA7268;
+  text-transform: uppercase;
 }
 
 .headerIcon {
@@ -41,7 +42,7 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-right: 20px;
+  margin: 5px;
 }
 
 .shareButton {

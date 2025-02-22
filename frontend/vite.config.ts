@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       VitePWA({
-        includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+        includeAssets: ['static/favicon.ico', 'static/apple-touch-icon.png', 'static/mask-icon.svg'],
         registerType: 'autoUpdate',
         manifest: {
           name: 'HubSpot Expert by Cat Media',
