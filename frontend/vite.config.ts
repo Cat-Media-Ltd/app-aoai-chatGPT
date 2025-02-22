@@ -29,6 +29,13 @@ export default defineConfig(({ mode }) => {
               sizes: '512x512',
               type: 'image/png',
             },
+            {
+              //iOS icon
+              src: 'Cat Media Mascot.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'maskable',
+            }
           ],
         },
       }),
