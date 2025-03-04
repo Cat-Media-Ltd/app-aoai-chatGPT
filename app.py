@@ -17,6 +17,7 @@ from quart import (
     redirect,
 )
 
+import base64
 from openai import AsyncAzureOpenAI
 from azure.identity.aio import (
     DefaultAzureCredential,
@@ -63,18 +64,9 @@ approved_users = ["juan@catmedia.ie"]
 
 app_url = os.environ.get("APP_URL", "https://expert.catmedia.ie")
 
-def get_user_email(auth_token):
-    auth = f'Bearer {auth_token}'
-    headers = {
-        'Authorization': auth,
-        'Content-Type': 'application/json'
-    }
-
-    logged_in_user_details_url = app_url+"/.auth/me"
-    response = httpx.get(logged_in_user_details_url, headers=headers)
-
-    if response.status_code == 200:
-        user_claims = response.json()[0]["user_claims"]
+def get_user_email(clientPrincipal):
+    if clientPrincipal:
+        user_claims = json.loads(clientPrincipal)
         email = None
         for claim in user_claims:
             if claim["typ"] == "preferred_username":
@@ -93,9 +85,10 @@ async def index():
         logging.debug(f"Authenticated user: {authenticated_user}")
         user_name = authenticated_user["user_name"]
         logging.debug(f"Authenticated user: {user_name}")
-
-        auth_token = authenticated_user["client_principal_b64"]
-        preferred_username = auth_token
+        
+        clientPrincipal= base64.b64decode(authenticated_user["client_principal_b64"])
+        logging.debug(f"Client principal: {clientPrincipal}")
+        preferred_username = get_user_email(clientPrincipal)
         logging.debug(f"Authenticated user: {preferred_username}")
         
        
