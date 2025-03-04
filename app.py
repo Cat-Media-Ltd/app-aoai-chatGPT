@@ -60,21 +60,18 @@ def create_app():
     
     return app
 
-approved_users = ["juan@catmedia.ie"]
+approved_users = ["juan@catmedia.ie", "indira@catmedia.ie"]
 
 app_url = os.environ.get("APP_URL", "https://expert.catmedia.ie")
 
-def get_user_email(clientPrincipal):
-    if clientPrincipal:
-        user_claims = json.loads(clientPrincipal)
-        email = None
-        for claim in user_claims:
-            if claim["typ"] == "preferred_username":
-                email = claim["val"]
-                break
-        return email
-    else:
-        return None
+def get_user_email(claims):
+    email = None
+    for claim in claims:
+        if claim["typ"] == "preferred_username":
+            email = claim["val"]
+            break
+    return email
+
                   
 
 @bp.route("/")
@@ -85,12 +82,16 @@ async def index():
         logging.debug(f"Authenticated user: {authenticated_user}")
         user_name = authenticated_user["user_name"]
         logging.debug(f"Authenticated user: {user_name}")
-        
-        clientPrincipal= base64.b64decode(authenticated_user["client_principal_b64"])
-        logging.debug(f"Client principal: {clientPrincipal}")
-        preferred_username = get_user_email(clientPrincipal)
-        logging.debug(f"Authenticated user: {preferred_username}")
-        
+        auth_provider = authenticated_user["auth_provider"]
+        logging.debug(f"Authenticated user: {auth_provider}")
+        if auth_provider == "aad":
+            clientPrincipal = base64.b64decode(authenticated_user["client_principal_b64"]).decode('utf-8')
+            clientPrincipal = json.loads(clientPrincipal)
+            claims = clientPrincipal["claims"]
+            preferred_username = get_user_email(claims)
+            logging.debug(f"Prefered username: {preferred_username}")
+        else:
+            preferred_username = None
        
         if user_name in approved_users or preferred_username in approved_users:
             return await render_template(
@@ -101,7 +102,7 @@ async def index():
             )
         else:
             # Redirect to an external waiting list page not in the app
-            return redirect("https://www.catmedia.ie/")
+            return redirect("https://www.furball.tech/pricing")
 
             
 
