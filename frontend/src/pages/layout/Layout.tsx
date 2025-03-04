@@ -5,7 +5,7 @@ import { CopyRegular } from '@fluentui/react-icons'
 
 import { CosmosDBStatus } from '../../api'
 import Contoso from '../../assets/Contoso.svg'
-import { HistoryButton, ShareButton } from '../../components/common/Button'
+import { HistoryButton, ShareButton, SignOutButton } from '../../components/common/Button'
 import { AppStateContext } from '../../state/AppProvider'
 
 import styles from './Layout.module.css'
@@ -18,6 +18,8 @@ const Layout = () => {
   const [hideHistoryLabel, setHideHistoryLabel] = useState<string>('Hide chat history')
   const [showHistoryLabel, setShowHistoryLabel] = useState<string>('Show chat history')
   const [logo, setLogo] = useState('')
+  const [isSignOutContainerOpen, setIsSignOutContainerOpen] = useState<boolean>(false)
+  
   const appStateContext = useContext(AppStateContext)
   const ui = appStateContext?.state.frontendSettings?.ui
 
@@ -38,6 +40,18 @@ const Layout = () => {
 
   const handleHistoryClick = () => {
     appStateContext?.dispatch({ type: 'TOGGLE_CHAT_HISTORY' })
+  }
+
+  // Toggle sign-out container when logo is clicked
+  const handleLogoClick = () => {
+    setIsSignOutContainerOpen(prev => !prev)
+  }
+
+  const handleSignOut = () => {
+    // Implement your sign out logic here
+    window.location.href = '/.auth/logout?post_logout_redirect_uri=https://furball.tech/pricing'
+    // Optionally close the container after signing out
+    setIsSignOutContainerOpen(false)
   }
 
   useEffect(() => {
@@ -78,18 +92,48 @@ const Layout = () => {
       <header className={styles.header} role={'banner'}>
         <Stack horizontal verticalAlign="center" horizontalAlign="space-between">
           <Stack horizontal verticalAlign="center">
-            <img src={logo} className={styles.headerIcon} aria-hidden="true" alt="" />
+            {/* Wrap the logo in a relative container */}
+            <div style={{ position: 'relative' }}>
+              <img 
+                src={logo} 
+                className={styles.headerIcon} 
+                aria-hidden="true" 
+                alt="" 
+                onClick={handleLogoClick} 
+                style={{ cursor: 'pointer' }} 
+              />
+              {isSignOutContainerOpen && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: 0,
+                    background: '#fff',
+                    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+                    width: 'auto',
+                    borderRadius: '4px',
+                    padding: '8px',
+                    zIndex: 10
+                  }}
+                >
+                  <SignOutButton text="Sign out" onClick={handleSignOut} />
+                </div>
+              )}
+            </div>
             <Link to="/" className={styles.headerTitleContainer}>
               <h1 className={styles.headerTitle}>{ui?.title}</h1>
             </Link>
           </Stack>
           <Stack horizontal tokens={{ childrenGap: 4 }} className={styles.shareButtonContainer}>
-            {appStateContext?.state.isCosmosDBAvailable?.status !== CosmosDBStatus.NotConfigured && ui?.show_chat_history_button !== false && (
-              <HistoryButton
-                onClick={handleHistoryClick}
-                text={appStateContext?.state?.isChatHistoryOpen ? hideHistoryLabel : showHistoryLabel}
-              />
-            )}
+            {appStateContext?.state.isCosmosDBAvailable?.status !== CosmosDBStatus.NotConfigured &&
+              ui?.show_chat_history_button !== false && (
+                <HistoryButton
+                  onClick={handleHistoryClick}
+                  text={
+                    appStateContext?.state?.isChatHistoryOpen ? hideHistoryLabel : showHistoryLabel
+                  }
+                />
+              )}
             {ui?.show_share_button && <ShareButton onClick={handleShareClick} text={shareLabel} />}
           </Stack>
         </Stack>
@@ -115,9 +159,10 @@ const Layout = () => {
           ]
         }}
         dialogContentProps={{
-          title: 'Share the web app',
+          title: 'Share this expert',
           showCloseButton: true
-        }}>
+        }}
+      >
         <Stack horizontal verticalAlign="center" style={{ gap: '8px' }}>
           <TextField className={styles.urlTextBox} defaultValue={window.location.href} readOnly />
           <div
@@ -126,7 +171,8 @@ const Layout = () => {
             tabIndex={0}
             aria-label="Copy"
             onClick={handleCopyClick}
-            onKeyDown={e => (e.key === 'Enter' || e.key === ' ' ? handleCopyClick() : null)}>
+            onKeyDown={e => (e.key === 'Enter' || e.key === ' ' ? handleCopyClick() : null)}
+          >
             <CopyRegular className={styles.copyButton} />
             <span className={styles.copyButtonText}>{copyText}</span>
           </div>

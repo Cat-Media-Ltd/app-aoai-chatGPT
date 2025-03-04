@@ -28,3 +28,14 @@ export const HistoryButton: React.FC<ButtonProps> = ({ onClick, text }) => {
     />
   )
 }
+
+export const SignOutButton: React.FC<ButtonProps> = ({ onClick, text }) => {
+  return (
+    <DefaultButton
+      className={styles.signOutButtonRoot}
+      text={text}
+      iconProps={{ iconName: 'SignOut' }}
+      onClick={onClick}
+    />
+  )
+}

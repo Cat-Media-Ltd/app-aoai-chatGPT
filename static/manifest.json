@@ -1,6 +1,6 @@
 {
   "index.css": {
-    "file": "assets/index-a665482e.css",
+    "file": "assets/index-1cda41a5.css",
     "src": "index.css"
   },
   "index.html": {
@@ -9,9 +9,9 @@
       "assets/Send-f8c768b7.svg"
     ],
     "css": [
-      "assets/index-a665482e.css"
+      "assets/index-1cda41a5.css"
     ],
-    "file": "assets/index-ac19fac9.js",
+    "file": "assets/index-a6c840e6.js",
     "isEntry": true,
     "src": "index.html"
   },
