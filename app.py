@@ -14,6 +14,7 @@ from quart import (
     send_from_directory,
     render_template,
     current_app,
+    redirect,
 )
 
 from openai import AsyncAzureOpenAI
@@ -58,15 +59,27 @@ def create_app():
     
     return app
 
+approved_users = ["juan@catmedia.ie"]
+                  
 
 @bp.route("/")
 async def index():
-    return await render_template(
-        "index.html",
-        title=app_settings.ui.title,
-        favicon=app_settings.ui.favicon
-    )
+    if app_settings.base_settings.auth_enabled:
+        authenticated_user = get_authenticated_user_details(request_headers=request.headers)
+        user_id = authenticated_user
+        user_name = authenticated_user["user_name"]
+        if user_name in approved_users:
+            return await render_template(
+                "index.html",
+                title=app_settings.ui.title,
+                favicon=app_settings.ui.favicon,
+                user_id=user_id
+            )
+        else:
+            # Redirect to an external waiting list page not in the app
+            return redirect("https://www.catmedia.ie/")
 
+            
 
 @bp.route("/favicon.ico")
 async def favicon():

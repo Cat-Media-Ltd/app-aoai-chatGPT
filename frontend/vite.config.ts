@@ -68,7 +68,9 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         '/ask': 'http://localhost:5000',
-        '/chat': 'http://localhost:5000'
+        '/chat': 'http://localhost:5000',
+        'static/*': 'http://localhost:5000',
+        
       }
     }
   }
