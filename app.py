@@ -85,11 +85,15 @@ async def index():
         auth_provider = authenticated_user["auth_provider"]
         logging.debug(f"Authenticated user: {auth_provider}")
         if auth_provider == "aad":
-            clientPrincipal = base64.b64decode(authenticated_user["client_principal_b64"]).decode('utf-8')
-            clientPrincipal = json.loads(clientPrincipal)
-            claims = clientPrincipal["claims"]
-            preferred_username = get_user_email(claims)
-            logging.debug(f"Prefered username: {preferred_username}")
+            try:
+                clientPrincipal = base64.b64decode(authenticated_user["client_principal_b64"]).decode('utf-8')
+                clientPrincipal = json.loads(clientPrincipal)
+                claims = clientPrincipal["claims"]
+                preferred_username = get_user_email(claims)
+                logging.debug(f"Prefered username: {preferred_username}")
+            except Exception as e:
+                logging.exception("Error decoding client principal")
+                preferred_username = None
         else:
             preferred_username = None
        
@@ -102,8 +106,17 @@ async def index():
             )
         else:
             # Redirect to an external waiting list page not in the app
-            return redirect("https://www.furball.tech/pricing")
+            return await render_template(
+                "login.html",
+                title=app_settings.ui.title,
+                favicon=app_settings.ui.favicon,
+                user_id=user_id
+            )
 
+#new after login route that redirecrs to / 
+@bp.route("/postlogin")
+async def postlogin():
+    return redirect("/")
             
 
 @bp.route("/favicon.ico")
