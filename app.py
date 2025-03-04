@@ -94,8 +94,8 @@ async def index():
         user_name = authenticated_user["user_name"]
         logging.debug(f"Authenticated user: {user_name}")
 
-        auth_token = authenticated_user["auth_token"]
-        preferred_username = get_user_email(auth_token)
+        auth_token = authenticated_user["client_principal_b64"]
+        preferred_username = auth_token
         logging.debug(f"Authenticated user: {preferred_username}")
         
        
