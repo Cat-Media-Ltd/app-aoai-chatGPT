@@ -60,6 +60,29 @@ def create_app():
     return app
 
 approved_users = ["juan@catmedia.ie"]
+
+app_url = os.environ.get("APP_URL", "https://expert.catmedia.ie")
+
+def get_user_email(auth_token):
+    auth = f'Bearer {auth_token}'
+    headers = {
+        'Authorization': auth,
+        'Content-Type': 'application/json'
+    }
+
+    logged_in_user_details_url = app_url+"/.auth/me"
+    response = httpx.get(logged_in_user_details_url, headers=headers)
+
+    if response.status_code == 200:
+        user_claims = response.json()[0]["user_claims"]
+        email = None
+        for claim in user_claims:
+            if claim["typ"] == "preferred_username":
+                email = claim["val"]
+                break
+        return email
+    else:
+        return None
                   
 
 @bp.route("/")
@@ -69,10 +92,14 @@ async def index():
         user_id = authenticated_user
         logging.debug(f"Authenticated user: {authenticated_user}")
         user_name = authenticated_user["user_name"]
-        user_principal_name = authenticated_user["user_principal_name"]
         logging.debug(f"Authenticated user: {user_name}")
-        logging.debug(f"Authenticated user: {user_principal_name}")
-        if user_name in approved_users or user_principal_name in approved_users:
+
+        auth_token = authenticated_user["auth_token"]
+        preferred_username = get_user_email(auth_token)
+        logging.debug(f"Authenticated user: {preferred_username}")
+        
+       
+        if user_name in approved_users or preferred_username in approved_users:
             return await render_template(
                 "index.html",
                 title=app_settings.ui.title,
