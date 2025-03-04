@@ -68,6 +68,7 @@ async def index():
         authenticated_user = get_authenticated_user_details(request_headers=request.headers)
         user_id = authenticated_user
         user_name = authenticated_user["user_name"]
+        logging.debug(f"Authenticated user: {user_name}")
         if user_name in approved_users:
             return await render_template(
                 "index.html",
