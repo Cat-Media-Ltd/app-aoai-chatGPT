@@ -93,7 +93,7 @@ async def index():
                 logging.debug(f"Prefered username: {preferred_username}")
             except Exception as e:
                 logging.exception("Error decoding client principal")
-                preferred_username = "juan@catmedia.ie"
+                preferred_username = None
         else:
             preferred_username = None
        
