@@ -836,7 +836,7 @@ const Chat = () => {
                     <div className={styles.chatMessageGpt}>
                       <Answer
                         answer={{
-                          answer: "Generating answer...",
+                          answer: "Thinking...",
                           citations: [],
                           generated_chart: null
                         }}
@@ -877,6 +877,11 @@ const Chat = () => {
                       iconDisabled: {
                         color: '#BDBDBD !important'
                       },
+                      iconHovered: {
+                        color: '#FFFFFF',
+                        transform: 'scale(1.2)',
+                        transition: 'transform 0.3s'
+                      },
                       root: {
                         color: '#FFFFFF',
                         background:
@@ -893,11 +898,16 @@ const Chat = () => {
                     aria-label="start a new chat button"
                   />
                 )}
-                <CommandBarButton
+         {/*        <CommandBarButton
                   role="button"
                   styles={{
                     icon: {
                       color: '#FFFFFF'
+                    },
+                    iconHovered: {
+                      color: '#FFFFFF',
+                      transform: 'scale(1.2)',
+                      transition: 'transform 0.3s'
                     },
                     iconDisabled: {
                       color: '#BDBDBD !important'
@@ -905,7 +915,7 @@ const Chat = () => {
                     root: {
                       color: '#FFFFFF',
                       background:
-                        'radial-gradient(circle, rgba(250,114,104,1) 0%, rgba(250,91,80,1) 100%)'
+                        '#BDBDBD !important'
                     },
                     rootDisabled: {
                       background: '#F0F0F0'
@@ -924,7 +934,7 @@ const Chat = () => {
                   }
                   disabled={disabledButton()}
                   aria-label="clear chat button"
-                />
+                /> */}
                 <Dialog
                   hidden={hideErrorDialog}
                   onDismiss={handleErrorDialogClose}

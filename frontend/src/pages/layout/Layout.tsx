@@ -15,8 +15,8 @@ const Layout = () => {
   const [copyClicked, setCopyClicked] = useState<boolean>(false)
   const [copyText, setCopyText] = useState<string>('Copy URL')
   const [shareLabel, setShareLabel] = useState<string | undefined>('Share')
-  const [hideHistoryLabel, setHideHistoryLabel] = useState<string>('Hide chat history')
-  const [showHistoryLabel, setShowHistoryLabel] = useState<string>('Show chat history')
+  const [hideHistoryLabel, setHideHistoryLabel] = useState<string | undefined>('Hide')
+  const [showHistoryLabel, setShowHistoryLabel] = useState<string | undefined>('Show')
   const [logo, setLogo] = useState('')
   const [isSignOutContainerOpen, setIsSignOutContainerOpen] = useState<boolean>(false)
   
@@ -72,12 +72,12 @@ const Layout = () => {
     const handleResize = () => {
       if (window.innerWidth < 480) {
         setShareLabel(undefined)
-        setHideHistoryLabel('Hide')
-        setShowHistoryLabel('Show')
+        setHideHistoryLabel(undefined)
+        setShowHistoryLabel(undefined)
       } else {
         setShareLabel('Share')
-        setHideHistoryLabel('Hide')
-        setShowHistoryLabel('Show')
+        setHideHistoryLabel(undefined)
+        setShowHistoryLabel(undefined)
       }
     }
 

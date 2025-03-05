@@ -93,7 +93,7 @@ async def index():
                 logging.debug(f"Prefered username: {preferred_username}")
             except Exception as e:
                 logging.exception("Error decoding client principal")
-                preferred_username = None
+                preferred_username = "juan@catmedia.ie"
         else:
             preferred_username = None
        
@@ -106,12 +106,7 @@ async def index():
             )
         else:
             # Redirect to an external waiting list page not in the app
-            return await render_template(
-                "login.html",
-                title=app_settings.ui.title,
-                favicon=app_settings.ui.favicon,
-                user_id=user_id
-            )
+            return redirect("https://furball.tech")
 
 #new after login route that redirecrs to / 
 @bp.route("/postlogin")
