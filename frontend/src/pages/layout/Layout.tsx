@@ -49,7 +49,7 @@ const Layout = () => {
 
   const handleSignOut = () => {
     // Implement your sign out logic here
-    window.location.href = '/.auth/logout?post_logout_redirect_uri=https://furball.tech/pricing'
+    window.location.href = '/.auth/logout?post_logout_redirect_uri=https://www.catmedia.ie/experts'
     // Optionally close the container after signing out
     setIsSignOutContainerOpen(false)
   }

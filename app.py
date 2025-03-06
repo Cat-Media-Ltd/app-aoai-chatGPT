@@ -106,7 +106,7 @@ async def index():
             )
         else:
             # Redirect to an external waiting list page not in the app
-            return redirect("https://furball.tech")
+            return redirect("https://www.catmedia.ie/experts")
 
 #new after login route that redirecrs to / 
 @bp.route("/postlogin")
