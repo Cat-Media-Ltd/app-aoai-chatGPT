@@ -60,7 +60,12 @@ def create_app():
     
     return app
 
-approved_users = ["juan@catmedia.ie", "indira@catmedia.ie"]
+# Debug settings
+DEBUG = os.environ.get("DEBUG", "false")
+if DEBUG.lower() == "true":
+    logging.basicConfig(level=logging.DEBUG)
+
+approved_users = ["juan@catmedia.ie", "indira@catmedia.ie", "aben@catmedia.ie", "gian.tomassoni@catmedia.ie"]
 
 app_url = os.environ.get("APP_URL", "https://expert.catmedia.ie")
 
@@ -97,7 +102,7 @@ async def index():
         else:
             preferred_username = None
        
-        if user_name in approved_users or preferred_username in approved_users:
+        if user_name in approved_users or preferred_username in approved_users or DEBUG
             return await render_template(
                 "index.html",
                 title=app_settings.ui.title,
@@ -124,10 +129,7 @@ async def assets(path):
     return await send_from_directory("static/assets", path)
 
 
-# Debug settings
-DEBUG = os.environ.get("DEBUG", "false")
-if DEBUG.lower() == "true":
-    logging.basicConfig(level=logging.DEBUG)
+
 
 USER_AGENT = "GitHubSampleWebApp/AsyncAzureOpenAI/1.0.0"
 
