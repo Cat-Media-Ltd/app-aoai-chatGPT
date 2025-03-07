@@ -102,7 +102,7 @@ async def index():
         else:
             preferred_username = None
        
-        if user_name in approved_users or preferred_username in approved_users or DEBUG
+        if user_name in approved_users or preferred_username in approved_users or DEBUG:
             return await render_template(
                 "index.html",
                 title=app_settings.ui.title,
