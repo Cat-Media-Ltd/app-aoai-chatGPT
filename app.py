@@ -5,6 +5,7 @@ import logging
 import uuid
 import httpx
 import asyncio
+from quart_cors import cors
 from quart import (
     Blueprint,
     Quart,
@@ -38,16 +39,27 @@ from backend.utils import (
     format_pf_non_streaming_response,
 )
 
+origins = ["http://localhost:3000"]
+
+settings = {
+    "allow_origin": origins,
+    "allow_headers": ["Content-Type", "Authorization"], 
+}
+
 bp = Blueprint("routes", __name__, static_folder="static", template_folder="static")
+bp = cors(bp, **settings)
 
 cosmos_db_ready = asyncio.Event()
 
 
 def create_app():
     app = Quart(__name__)
+    app = cors(app, **settings)
     app.register_blueprint(bp)
     app.config["TEMPLATES_AUTO_RELOAD"] = True
     
+   
+
     @app.before_serving
     async def init():
         try:
