@@ -93,37 +93,50 @@ def get_user_email(claims):
 
 @bp.route("/")
 async def index():
-    if app_settings.base_settings.auth_enabled:
-        authenticated_user = get_authenticated_user_details(request_headers=request.headers)
-        user_id = authenticated_user
-        logging.debug(f"Authenticated user: {authenticated_user}")
-        user_name = authenticated_user["user_name"]
-        logging.debug(f"Authenticated user: {user_name}")
-        auth_provider = authenticated_user["auth_provider"]
-        logging.debug(f"Authenticated user: {auth_provider}")
-        if auth_provider == "aad":
-            try:
-                clientPrincipal = base64.b64decode(authenticated_user["client_principal_b64"]).decode('utf-8')
-                clientPrincipal = json.loads(clientPrincipal)
-                claims = clientPrincipal["claims"]
-                preferred_username = get_user_email(claims)
-                logging.debug(f"Prefered username: {preferred_username}")
-            except Exception as e:
-                logging.exception("Error decoding client principal")
-                preferred_username = None
-        else:
+    try:
+        if app_settings.base_settings.auth_enabled:
+            authenticated_user = get_authenticated_user_details(request_headers=request.headers)
+            if not authenticated_user:
+                logging.error("Failed to get authenticated user details.")
+                return "Unauthorized", 401  # Handle authentication failure gracefully
+            
+            user_id = authenticated_user
+            logging.debug(f"Authenticated user: {authenticated_user}")
+            user_name = authenticated_user.get("user_name")
+            auth_provider = authenticated_user.get("auth_provider")
+
             preferred_username = None
-       
-        if user_name in approved_users or preferred_username in approved_users or DEBUG:
-            return await render_template(
-                "index.html",
-                title=app_settings.ui.title,
-                favicon=app_settings.ui.favicon,
-                user_id=user_id
-            )
-        else:
-            # Redirect to an external waiting list page not in the app
-            return redirect("https://www.catmedia.ie/experts")
+            if auth_provider == "aad":
+                try:
+                    clientPrincipal = base64.b64decode(authenticated_user["client_principal_b64"]).decode('utf-8')
+                    clientPrincipal = json.loads(clientPrincipal)
+                    claims = clientPrincipal["claims"]
+                    preferred_username = get_user_email(claims)
+                    logging.debug(f"Preferred username: {preferred_username}")
+                except Exception as e:
+                    logging.exception("Error decoding client principal")
+
+            if user_name in approved_users or preferred_username in approved_users or DEBUG:
+                return await render_template(
+                    "index.html",
+                    title=app_settings.ui.title,
+                    favicon=app_settings.ui.favicon,
+                    user_id=user_id
+                )
+            else:
+                return redirect("https://www.catmedia.ie/experts")
+
+        # Case when authentication is disabled (explicit return)
+        return await render_template(
+            "index.html",
+            title=app_settings.ui.title,
+            favicon=app_settings.ui.favicon,
+            user_id=None  # Handle anonymous access
+        )
+
+    except Exception as e:
+        logging.exception("Unhandled exception in index route")
+        return "Internal Server Error", 500  # Ensure no `None` response
 
 #new after login route that redirecrs to / 
 @bp.route("/postlogin")
