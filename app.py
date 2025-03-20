@@ -5,6 +5,7 @@ import logging
 import uuid
 import httpx
 import asyncio
+from backend.security.auth import require_auth
 from quart_cors import cors
 from quart import (
     Blueprint,
@@ -487,6 +488,7 @@ async def conversation():
 
 
 @bp.route("/frontend_settings", methods=["GET"])
+@require_auth
 def get_frontend_settings():
     try:
         return jsonify(frontend_settings), 200

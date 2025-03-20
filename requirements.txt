@@ -13,3 +13,7 @@ pydantic-settings==2.2.1
 quart-auth 
 authlib
 quart-cors
+PyJWT
+requests
+cryptography
+quart-auth
