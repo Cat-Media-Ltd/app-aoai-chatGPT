@@ -39,8 +39,7 @@ async def verify_token(token):
 
         key = public_keys[unverified_header["kid"]]
         public_key = jwt.algorithms.RSAAlgorithm.from_jwk(json.dumps(key))
-        pprint(key)
-        pprint(public_key)
+   
         decoded_token = jwt.decode(
             token,
             key=public_key,
