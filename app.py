@@ -93,6 +93,7 @@ def get_user_email(claims):
                   
 
 @bp.route("/")
+@require_auth
 async def index():
     try:
         if app_settings.base_settings.auth_enabled:
